@@ -1,65 +1,85 @@
-import Image from "next/image";
+import { createClient } from "@/lib/supabase/server"
+import { LandingPage } from "@/components/features/LandingPage"
+import { Dashboard } from "@/components/features/Dashboard"
+import { SetupCard } from "@/components/features/SetupCard"
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+export default async function Home() {
+  const supabase = await createClient()
+
+  // Check Auth
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user || !user.email) {
+    return <LandingPage />
+  }
+
+  // Fetch User Profile & Products
+  // We fetch profile to check is_paid status and products deeply
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*, products(*, daily_signup_entries(*))')
+    .eq('id', user.id)
+    .single()
+
+  // Edge case: User logged in but Profile missing (should use trigger, but just in case)
+  if (!profile) return <LandingPage />
+
+  // Check if user has ANY products
+  const products = profile.products || []
+
+  if (products.length === 0) {
+    return <SetupCard />
+  }
+
+  // Data cleaning for client components
+  const cleanUser = {
+    id: profile.id,
+    email: profile.email,
+    isPaid: profile.is_paid,
+    stripeCustomerId: profile.stripe_customer_id,
+    createdAt: profile.created_at,
+    updatedAt: profile.updated_at,
+  }
+
+  const cleanProducts = products.map((product: any) => {
+    let rawEntries = product.daily_signup_entries || []
+
+    // Filter entries for free users (server-side security + optimization)
+    // If free, only send last 14 days. 
+    // Note: If user is turned from Paid -> Free, they lose access to old data here.
+    if (!cleanUser.isPaid) {
+      const today = new Date()
+      const cutoffDate = new Date()
+      cutoffDate.setDate(today.getDate() - 13) // 14 days inclusive
+      const cutoffStr = cutoffDate.toISOString().split('T')[0]
+      rawEntries = rawEntries.filter((e: any) => e.date >= cutoffStr)
+    }
+
+    const cleanEntries = rawEntries.map((e: any) => ({
+      id: e.id,
+      productId: e.product_id,
+      date: e.date,
+      count: e.count,
+      createdAt: e.created_at,
+      updatedAt: e.updated_at,
+    }))
+
+    return {
+      id: product.id,
+      userId: product.user_id,
+      name: product.name,
+      website: product.website,
+      baselineTotalSignups: product.baseline_total_signups,
+      launchDate: product.launch_date,
+      signupSource: product.signup_source,
+      createdAt: product.created_at,
+      updatedAt: product.updated_at,
+      initialEntries: cleanEntries
+    }
+  })
+
+  return <Dashboard
+    user={cleanUser}
+    products={cleanProducts}
+  />
 }
