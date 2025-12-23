@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { logDailySignups, createCheckoutSession } from "@/actions"
+import { logDailySignups, createCheckoutSession, signOut } from "@/actions"
 import { calculateStats, Verdict } from "@/lib/signup-logic"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Lock, TrendingUp, Minus, AlertCircle, Share2, Plus } from "lucide-react"
+import { Lock, TrendingUp, Minus, AlertCircle, Share2, Plus, LogOut } from "lucide-react"
 import { ChartStats } from "./ChartStats"
 import { cn } from "@/lib/utils"
 import { VerdictCardModal } from "@/components/features/VerdictCardModal"
@@ -161,9 +161,19 @@ export function Dashboard({ user, products }: DashboardProps) {
 
                     {product.website && <div className="text-[10px] text-neutral-500 font-mono tracking-tight ml-4 uppercase opacity-50">{product.website}</div>}
                 </div>
-                <div className="text-sm text-neutral-400">
-                    <span className="mr-2">{user.isPaid ? "Lifetime Pro" : "Free Plan"}</span>
-                    {!user.isPaid && <Button variant="link" onClick={() => createCheckoutSession()} className="text-orange-500 p-0 h-auto hover:text-orange-400 cursor-pointer">Upgrade</Button>}
+                <div className="flex items-center gap-6 text-sm text-neutral-400">
+                    <div className="flex items-center">
+                        <span className="mr-2">{user.isPaid ? "Lifetime Pro" : "Free Plan"}</span>
+                        {!user.isPaid && <Button variant="link" onClick={() => createCheckoutSession()} className="text-orange-500 p-0 h-auto hover:text-orange-400 cursor-pointer">Upgrade</Button>}
+                    </div>
+                    <button
+                        onClick={() => signOut()}
+                        className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer group px-2 py-1 rounded-md hover:bg-white/5"
+                        title="Sign Out"
+                    >
+                        <LogOut className="w-4 h-4 group-hover:text-orange-500 transition-colors" />
+                        <span>Logout</span>
+                    </button>
                 </div>
             </nav >
 

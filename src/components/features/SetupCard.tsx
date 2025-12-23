@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { createProduct } from "@/actions"
+import { createProduct, signOut } from "@/actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { createClient } from "@/lib/supabase/client" // Just for logout if needed? Actually not used here.
+import { LogOut } from "lucide-react"
 
 export function SetupCard() {
     const [isLoading, setIsLoading] = useState(false)
@@ -24,7 +24,17 @@ export function SetupCard() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white">
+        <div className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white relative">
+            {/* Top Right Logout for Setup Phase */}
+            <button
+                onClick={() => signOut()}
+                className="absolute top-8 right-8 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors cursor-pointer group text-sm"
+                title="Sign Out"
+            >
+                <LogOut className="w-4 h-4 group-hover:text-orange-500 transition-colors" />
+                <span>Logout</span>
+            </button>
+
             <div className="w-full max-w-lg space-y-8">
                 <div className="text-center">
                     <h1 className="text-3xl font-bold tracking-tight">Let's set up your tracker</h1>

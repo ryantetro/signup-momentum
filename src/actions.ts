@@ -122,3 +122,9 @@ export async function logDailySignups(productId: string, date: string, count: nu
 
     revalidatePath("/")
 }
+
+export async function signOut() {
+    const supabase = await createClient()
+    await supabase.auth.signOut()
+    redirect("/")
+}
