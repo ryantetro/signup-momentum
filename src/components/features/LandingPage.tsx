@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowRight, Check, X, BarChart3, TrendingUp, Shield, Zap } from "lucide-react"
+import { NumberTicker } from "@/components/ui/number-ticker"
 
 export function LandingPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -78,6 +79,7 @@ export function LandingPage() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+
     return (
         <div className="flex min-h-screen flex-col font-sans text-neutral-50 bg-neutral-950 selection:bg-orange-500/30">
             {/* Nav */}
@@ -137,52 +139,56 @@ export function LandingPage() {
 
                     {/* Hero Image Mockup (Detailed Dashboard) */}
                     <div className="mt-20 w-full max-w-5xl rounded-xl border border-white/10 bg-neutral-900/50 p-2 shadow-2xl backdrop-blur-sm">
-                        <div className="rounded-lg border border-white/5 bg-neutral-950 overflow-hidden aspect-[16/10] relative flex flex-col group text-left">
+                        <div className="rounded-lg border border-white/5 bg-neutral-950 overflow-hidden md:aspect-[16/10] min-h-[400px] md:min-h-0 relative flex flex-col group text-left">
 
                             {/* Mock Window Header */}
                             <div className="border-b border-white/5 bg-neutral-900/50 px-4 py-3 flex items-center gap-4">
                                 <div className="flex gap-2">
                                     <div className="w-3 h-3 rounded-full bg-red-500/10 border border-red-500/20"></div>
-                                    <div className="w-3 h-3 rounded-full bg-yellow-500/10 border border-yellow-500/20"></div>
-                                    <div className="w-3 h-3 rounded-full bg-green-500/10 border border-green-500/20"></div>
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500/10 border border-yellow-500/20 hidden sm:block"></div>
+                                    <div className="w-3 h-3 rounded-full bg-green-500/10 border border-green-500/20 hidden sm:block"></div>
                                 </div>
                                 <div className="flex-1 text-center">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-neutral-900 border border-white/5 text-xs text-neutral-500 font-mono shadow-inner">
-                                        <span className="text-green-500/80">🔒</span> signupmomentum.com
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-neutral-900 border border-white/5 text-[10px] sm:text-xs text-neutral-500 font-mono shadow-inner">
+                                        <span className="text-green-500/80">🔒</span> <span className="truncate max-w-[120px] sm:max-w-none">signupmomentum.com</span>
                                     </div>
                                 </div>
-                                <div className="w-16"></div>
+                                <div className="w-8 sm:w-16"></div>
                             </div>
 
                             {/* Dashboard Content */}
-                            <div className="p-6 md:p-8 flex-1 bg-neutral-950 flex flex-col gap-6 relative">
+                            <div className="p-4 md:p-8 flex-1 bg-neutral-950 flex flex-col gap-4 md:gap-6 relative">
 
                                 {/* Header Row */}
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-6 w-6 rounded bg-orange-600 flex items-center justify-center text-white text-[10px] font-bold">SM</div>
-                                        <span className="text-white font-semibold text-xs text-nowrap">Signup Momentum</span>
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2 sm:gap-3">
+                                        <div className="h-5 w-5 sm:h-6 sm:w-6 rounded bg-orange-600 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">SM</div>
+                                        <span className="text-white font-semibold text-[10px] sm:text-xs text-nowrap">Signup Momentum</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-neutral-400 bg-neutral-900 border border-white/5 rounded-md px-3 py-1.5">
-                                        <span className={`w-2 h-2 rounded-full ${isDemoLoaded ? 'bg-green-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+                                    <div className="flex items-center gap-2 text-[10px] sm:text-sm text-neutral-400 bg-neutral-900 border border-white/5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5">
+                                        <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${isDemoLoaded ? 'bg-green-500 animate-pulse' : 'bg-neutral-600'}`}></span>
                                         <span>{isDemoLoaded ? 'Live' : 'Offline'}</span>
                                     </div>
                                 </div>
 
                                 {/* Stats Row */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                                     {[
-                                        { label: "Signups (30d)", value: "342", change: "+12%", trend: "up", delay: "0ms" },
-                                        { label: "Verdict", value: "Growing", change: "Compounding", trend: "neutral", highlight: true, delay: "100ms" },
-                                        { label: "Avg Daily", value: "11.4", change: "+2.1", trend: "up", delay: "200ms" },
-                                        { label: "Forecast", value: "~450", change: "End of month", trend: "neutral", delay: "300ms" },
+                                        { label: "Signups (30d)", value: "342", change: "+12%", trend: "up", delay: 0 },
+                                        { label: "Verdict", value: "Growing", change: "Compounding", trend: "neutral", highlight: true, delay: 100 },
+                                        { label: "Avg Daily", value: "11.4", change: "+2.1", trend: "up", delay: 200 },
+                                        { label: "Forecast", value: "~450", change: "End of month", trend: "neutral", delay: 300 },
                                     ].map((stat, i) => (
-                                        <div key={i} className={`rounded-xl border p-4 transition-all duration-700 ${stat.highlight ? 'bg-white/[0.03] border-white/10' : 'bg-neutral-900/20 border-white/5'}`}>
-                                            <div className="text-neutral-500 text-[10px] uppercase tracking-wider font-semibold mb-1">{stat.label}</div>
-                                            <div className={`text-2xl font-bold mb-2 transition-all duration-700 ${stat.highlight ? 'text-white' : 'text-neutral-200'} ${isDemoLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: stat.delay }}>
-                                                {isDemoLoaded ? stat.value : "---"}
+                                        <div key={i} className={`rounded-xl border p-3 md:p-4 transition-all duration-700 ${stat.highlight ? 'bg-white/[0.03] border-white/10' : 'bg-neutral-900/20 border-white/5'}`}>
+                                            <div className="text-neutral-500 text-[8px] sm:text-[10px] uppercase tracking-wider font-semibold mb-1">{stat.label}</div>
+                                            <div className={`text-xl md:text-2xl font-bold mb-1 md:mb-2 transition-all duration-700 ${stat.highlight ? 'text-white' : 'text-neutral-200'} ${isDemoLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: `${stat.delay}ms` }}>
+                                                {stat.label === "Verdict" ? (
+                                                    <span className={isDemoLoaded ? "animate-in zoom-in-50 duration-500" : ""}>{isDemoLoaded ? stat.value : "---"}</span>
+                                                ) : (
+                                                    isDemoLoaded ? <NumberTicker value={stat.value} delay={stat.delay} /> : "---"
+                                                )}
                                             </div>
-                                            <div className={`text-xs flex items-center gap-1 font-medium ${stat.trend === 'up' ? 'text-green-500' : 'text-neutral-500'} ${isDemoLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                                            <div className={`text-[10px] md:text-xs flex items-center gap-1 font-medium ${stat.trend === 'up' ? 'text-green-500' : 'text-neutral-500'} ${isDemoLoaded ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: `${stat.delay + 300}ms` }}>
                                                 {stat.trend === 'up' && "↑"} {stat.change}
                                             </div>
                                         </div>
@@ -203,8 +209,8 @@ export function LandingPage() {
                                                     <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
                                                 </linearGradient>
                                             </defs>
-                                            <path d="M0,100 C50,90 80,70 120,65 C180,60 220,40 280,30 C340,20 400,10 400,10 L400,100 L0,100 Z" fill="url(#gradient)" className="animate-in fade-in slide-in-from-bottom-4 duration-1000" />
-                                            <path d="M0,100 C50,90 80,70 120,65 C180,60 220,40 280,30 C340,20 400,10 400,10" fill="none" stroke="#f97316" strokeWidth="3" vectorEffect="non-scaling-stroke" className="animate-in fade-in width-full duration-1000 delay-300" />
+                                            <path d="M0,100 C50,90 80,70 120,65 C180,60 220,40 280,30 C340,20 400,10 400,10 L400,100 L0,100 Z" fill="url(#gradient)" className={isDemoLoaded ? "animate-chart-fill" : "opacity-0"} />
+                                            <path d="M0,100 C50,90 80,70 120,65 C180,60 220,40 280,30 C340,20 400,10 400,10" fill="none" stroke="#f97316" strokeWidth="3" vectorEffect="non-scaling-stroke" className={isDemoLoaded ? "animate-chart-draw" : "opacity-0"} />
 
                                             {/* Points */}
                                             {[
@@ -218,16 +224,16 @@ export function LandingPage() {
                                     {/* Floating Tooltip Card */}
                                     <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform transition-all duration-700 delay-500 ${isDemoLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
                                         <div className="flex flex-col items-center justify-center">
-                                            <div className="px-8 py-6 rounded-2xl bg-neutral-900/80 border border-white/10 backdrop-blur-xl shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] text-center">
-                                                <div className="inline-flex items-center gap-2 border border-green-500/20 bg-green-500/10 px-3 py-1 rounded-full mb-3">
-                                                    <span className="relative flex h-2 w-2">
+                                            <div className="px-4 py-4 sm:px-8 sm:py-6 rounded-2xl bg-neutral-900/80 border border-white/10 backdrop-blur-xl shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] text-center min-w-[200px] sm:min-w-[280px]">
+                                                <div className="inline-flex items-center gap-2 border border-green-500/20 bg-green-500/10 px-2 sm:px-3 py-1 rounded-full mb-2 sm:mb-3">
+                                                    <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
                                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-green-500"></span>
                                                     </span>
-                                                    <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest">Momentum Detected</span>
+                                                    <span className="text-[8px] sm:text-[10px] font-bold text-green-500 uppercase tracking-widest">Momentum Detected</span>
                                                 </div>
-                                                <h3 className="text-4xl font-bold text-white mb-1 tracking-tight">GROWING</h3>
-                                                <p className="text-neutral-400 text-sm">Signups are compounding.</p>
+                                                <h3 className="text-2xl sm:text-4xl font-bold text-white mb-0.5 sm:mb-1 tracking-tight">GROWING</h3>
+                                                <p className="text-neutral-400 text-[10px] sm:text-sm">Signups are compounding.</p>
                                             </div>
                                         </div>
                                     </div>

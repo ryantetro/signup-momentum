@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 interface ChartEntry {
@@ -24,6 +24,27 @@ const getControlPoint = (current: number[], prev: number[], next: number[], reve
 
 export function ChartStats({ entries }: { entries: ChartEntry[] }) {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+    const [pathLength, setPathLength] = useState(0)
+    const [isAnimating, setIsAnimating] = useState(false)
+    const pathRef = useRef<SVGPathElement>(null)
+
+    useEffect(() => {
+        setIsAnimating(false)
+
+        // Micro-task to allow state reset to happen first
+        const raf = requestAnimationFrame(() => {
+            if (pathRef.current) {
+                const length = pathRef.current.getTotalLength()
+                setPathLength(length)
+                // Another RAF to ensure the initial pathLength styles are applied
+                requestAnimationFrame(() => {
+                    setIsAnimating(true)
+                })
+            }
+        })
+
+        return () => cancelAnimationFrame(raf)
+    }, [entries])
 
     // Sort entries chronologically just in case
     const sorted = [...entries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -76,17 +97,29 @@ export function ChartStats({ entries }: { entries: ChartEntry[] }) {
                 </defs>
 
                 {/* Area Fill */}
-                <path d={fillPathD} fill="url(#chartGradient)" className="transition-all duration-300" />
+                <path
+                    d={fillPathD}
+                    fill="url(#chartGradient)"
+                    className={cn(
+                        "transition-all duration-300",
+                        isAnimating ? "animate-chart-fill" : "opacity-0"
+                    )}
+                />
 
                 {/* Line */}
                 <path
+                    ref={pathRef}
                     d={pathD}
                     fill="none"
                     stroke="#f97316"
                     strokeWidth="3"
                     filter="url(#glow)"
                     vectorEffect="non-scaling-stroke"
-                    className="transition-all duration-300"
+                    style={{
+                        strokeDasharray: pathLength,
+                        strokeDashoffset: isAnimating ? 0 : pathLength,
+                        transition: isAnimating ? "stroke-dashoffset 2s cubic-bezier(0.65, 0, 0.35, 1)" : "none"
+                    }}
                 />
 
                 {/* Interactive Points (Invisible Columns) */}

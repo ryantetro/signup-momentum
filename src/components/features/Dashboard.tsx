@@ -10,6 +10,7 @@ import { ChartStats } from "./ChartStats"
 import { cn } from "@/lib/utils"
 import { VerdictCardModal } from "@/components/features/VerdictCardModal"
 import { CreateProductModal } from "@/components/features/CreateProductModal"
+import { NumberTicker } from "@/components/ui/number-ticker"
 
 // Types matching the serialized data from page.tsx
 type DashboardProps = {
@@ -201,11 +202,15 @@ export function Dashboard({ user, products }: DashboardProps) {
                     <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center border-t border-white/5 pt-8">
                         <div>
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">Avg/Day</div>
-                            <div className="text-2xl font-bold">{avg7}</div>
+                            <div className="text-2xl font-bold">
+                                <NumberTicker value={avg7} />
+                            </div>
                         </div>
                         <div>
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">WoW Change</div>
-                            <div className="text-2xl font-bold">{verdict === "NOT_ENOUGH_DATA" ? "-" : wowChangePct + "%"}</div>
+                            <div className="text-2xl font-bold">
+                                {verdict === "NOT_ENOUGH_DATA" ? "-" : <NumberTicker value={(wowChangePct > 0 ? "+" : "") + wowChangePct + "%"} />}
+                            </div>
                         </div>
                         <div>
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">Last Log</div>
@@ -222,7 +227,7 @@ export function Dashboard({ user, products }: DashboardProps) {
                                 {user.isPaid ? "Total" : "14d Total"}
                             </div>
                             <div className="text-2xl font-bold flex items-center justify-center gap-2">
-                                {visibleTotal}
+                                <NumberTicker value={visibleTotal} />
                                 {!user.isPaid && <Lock className="w-3 h-3 opacity-50" />}
                             </div>
                         </div>
