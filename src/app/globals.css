@@ -48,3 +48,12 @@ body {
   opacity: 0;
   animation: chartFillFadeIn 1s ease-out 1.5s forwards;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

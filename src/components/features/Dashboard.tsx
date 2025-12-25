@@ -122,14 +122,14 @@ export function Dashboard({ user, products }: DashboardProps) {
             <nav className="border-b border-white/5 px-6 py-4 flex justify-between items-center bg-neutral-950/50 backdrop-blur-xl sticky top-0 z-10">
                 <div className="flex flex-col items-start gap-1">
                     {/* Horizontal Project Switcher */}
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5 p-1 bg-white/5 rounded-full border border-white/5">
+                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mb-1 max-w-[calc(100vw-150px)] sm:max-w-none">
+                        <div className="flex items-center gap-1.5 p-1 bg-white/5 rounded-full border border-white/5 shrink-0">
                             {products.map(p => (
                                 <button
                                     key={p.id}
                                     onClick={() => setActiveProductId(p.id)}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer",
+                                        "px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap cursor-pointer shrink-0",
                                         activeProductId === p.id
                                             ? "bg-white text-black shadow-sm"
                                             : "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
@@ -143,7 +143,7 @@ export function Dashboard({ user, products }: DashboardProps) {
                         {/* Add Product Button (Visible to all, functions as Upsell for Free) */}
                         <button
                             onClick={() => user.isPaid ? setIsCreateModalOpen(true) : createCheckoutSession()}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-xs font-medium text-neutral-400 hover:text-white transition-colors cursor-pointer border border-white/5 group"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-[10px] sm:text-xs font-medium text-neutral-400 hover:text-white transition-colors cursor-pointer border border-white/5 group shrink-0"
                             title={user.isPaid ? "Create New Product" : "Upgrade to add more products"}
                         >
                             {user.isPaid ? (
@@ -162,10 +162,10 @@ export function Dashboard({ user, products }: DashboardProps) {
 
                     {product.website && <div className="text-[10px] text-neutral-500 font-mono tracking-tight ml-4 uppercase opacity-50">{product.website}</div>}
                 </div>
-                <div className="flex items-center gap-6 text-sm text-neutral-400">
+                <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm text-neutral-400">
                     <div className="flex items-center">
-                        <span className="mr-2">{user.isPaid ? "Lifetime Pro" : "Free Plan"}</span>
-                        {!user.isPaid && <Button variant="link" onClick={() => createCheckoutSession()} className="text-orange-500 p-0 h-auto hover:text-orange-400 cursor-pointer">Upgrade</Button>}
+                        <span className="mr-2 hidden sm:inline">{user.isPaid ? "Lifetime Pro" : "Free Plan"}</span>
+                        {!user.isPaid && <Button variant="link" onClick={() => createCheckoutSession()} className="text-orange-500 p-0 h-auto hover:text-orange-400 cursor-pointer text-xs sm:text-sm">Upgrade</Button>}
                     </div>
                     <button
                         onClick={() => signOut()}
@@ -173,14 +173,14 @@ export function Dashboard({ user, products }: DashboardProps) {
                         title="Sign Out"
                     >
                         <LogOut className="w-4 h-4 group-hover:text-orange-500 transition-colors" />
-                        <span>Logout</span>
+                        <span className="hidden sm:inline">Logout</span>
                     </button>
                 </div>
             </nav >
 
-            <main className="max-w-2xl mx-auto px-4 py-12 space-y-12">
+            <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
                 {/* 1. Verdict Section */}
-                <div className={cn("relative rounded-3xl border p-10 text-center transition-all duration-500", verdictColors[verdict])}>
+                <div className={cn("relative rounded-[2.5rem] border p-6 sm:p-10 text-center transition-all duration-500", verdictColors[verdict])}>
                     {/* Share Button Absolute Top Right */}
                     <button
                         onClick={() => setIsShareOpen(true)}
@@ -190,31 +190,31 @@ export function Dashboard({ user, products }: DashboardProps) {
                         <Share2 className="w-4 h-4" />
                     </button>
 
-                    <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-4">{verdictText[verdict]}</h2>
-                    <p className="text-lg font-medium opacity-80 mb-8">
+                    <h2 className="text-4xl sm:text-6xl font-bold tracking-tighter mb-2 sm:mb-4">{verdictText[verdict]}</h2>
+                    <p className="text-base sm:text-lg font-medium opacity-80 mb-6 sm:mb-8">
                         {verdict === "NOT_ENOUGH_DATA" ? "" : (wowChangePct > 0 ? "+" : "") + wowChangePct + "% week over week"}
                     </p>
 
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-950/30 border border-white/5 text-sm font-medium backdrop-blur-md">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-950/30 border border-white/5 text-[10px] sm:text-sm font-medium backdrop-blur-md">
                         {verdictMessage[verdict]}
                     </div>
 
-                    <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center border-t border-white/5 pt-8">
+                    <div className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-y-6 gap-x-4 text-center border-t border-white/5 pt-8">
                         <div>
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">Avg/Day</div>
-                            <div className="text-2xl font-bold">
+                            <div className="text-xl sm:text-2xl font-bold">
                                 <NumberTicker value={avg7} />
                             </div>
                         </div>
                         <div>
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">WoW Change</div>
-                            <div className="text-2xl font-bold">
+                            <div className="text-xl sm:text-2xl font-bold">
                                 {verdict === "NOT_ENOUGH_DATA" ? "-" : <NumberTicker value={(wowChangePct > 0 ? "+" : "") + wowChangePct + "%"} />}
                             </div>
                         </div>
                         <div>
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">Last Log</div>
-                            <div className="text-2xl font-bold">
+                            <div className="text-xl sm:text-2xl font-bold">
                                 {entries.length > 0 ? (() => {
                                     const last = new Date(entries.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date);
                                     const diff = Math.floor((new Date().getTime() - last.getTime()) / (86400000));
@@ -226,7 +226,7 @@ export function Dashboard({ user, products }: DashboardProps) {
                             <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">
                                 {user.isPaid ? "Total" : "14d Total"}
                             </div>
-                            <div className="text-2xl font-bold flex items-center justify-center gap-2">
+                            <div className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-2">
                                 <NumberTicker value={visibleTotal} />
                                 {!user.isPaid && <Lock className="w-3 h-3 opacity-50" />}
                             </div>
@@ -238,12 +238,12 @@ export function Dashboard({ user, products }: DashboardProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Yesterday Input (Only if missing or editing) */}
                     {(isYesterdayMissing || yesterdayEntry) && (
-                        <div className="bg-white/5 rounded-2xl p-8 border border-white/10 relative overflow-hidden group">
+                        <div className="bg-white/5 rounded-2xl p-6 sm:p-8 border border-white/10 relative overflow-hidden group">
                             {isYesterdayMissing && <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-red-500/20 transition-all duration-700"></div>}
 
-                            <div className="flex items-center gap-2 mb-6 relative z-10">
+                            <div className="flex items-center gap-2 mb-4 sm:mb-6 relative z-10">
                                 {isYesterdayMissing && <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>}
-                                <h3 className="font-bold text-lg text-white">Yesterday's Signups</h3>
+                                <h3 className="font-bold text-base sm:text-lg text-white">Yesterday's Signups</h3>
                             </div>
 
                             <div className="flex gap-4 relative z-10">
@@ -254,14 +254,14 @@ export function Dashboard({ user, products }: DashboardProps) {
                                     value={yesterdayEntry && !isEditingYesterday ? yesterdayEntry.count : yesterdayCount}
                                     onChange={(e) => setYesterdayCount(e.target.value)}
                                     disabled={!!yesterdayEntry && !isEditingYesterday}
-                                    className={cn("text-lg h-14 bg-neutral-900/50 border-white/10 text-white placeholder:text-neutral-600 focus-visible:border-red-500 focus-visible:ring-red-500/20", yesterdayEntry && !isEditingYesterday && "opacity-50 cursor-not-allowed")}
+                                    className={cn("text-base sm:text-lg h-12 sm:h-14 bg-neutral-900/50 border-white/10 text-white placeholder:text-neutral-600 focus-visible:border-red-500 focus-visible:ring-red-500/20", yesterdayEntry && !isEditingYesterday && "opacity-50 cursor-not-allowed")}
                                 />
                                 {yesterdayEntry && !isEditingYesterday ? (
-                                    <Button size="lg" onClick={() => { setYesterdayCount(yesterdayEntry.count.toString()); setIsEditingYesterday(true) }} className="h-14 px-6 bg-white/10 text-white hover:bg-white/20 font-bold">
+                                    <Button size="lg" onClick={() => { setYesterdayCount(yesterdayEntry.count.toString()); setIsEditingYesterday(true) }} className="h-12 sm:h-14 px-4 sm:px-6 bg-white/10 text-white hover:bg-white/20 font-bold text-sm sm:text-base">
                                         Edit
                                     </Button>
                                 ) : (
-                                    <Button size="lg" onClick={() => handleSave(yesterdayStr, yesterdayCount)} disabled={isSaving || yesterdayCount === ""} className="h-14 px-6 bg-white text-black hover:bg-neutral-200 font-bold">
+                                    <Button size="lg" onClick={() => handleSave(yesterdayStr, yesterdayCount)} disabled={isSaving || yesterdayCount === ""} className="h-12 sm:h-14 px-4 sm:px-6 bg-white text-black hover:bg-neutral-200 font-bold text-sm sm:text-base">
                                         Save
                                     </Button>
                                 )}
@@ -270,10 +270,10 @@ export function Dashboard({ user, products }: DashboardProps) {
                     )}
 
                     {/* Today Input */}
-                    <div className={cn("bg-white/5 rounded-2xl p-8 border border-white/10 relative overflow-hidden group", (!isYesterdayMissing && !yesterdayEntry) ? "md:col-span-2" : "")}>
+                    <div className={cn("bg-white/5 rounded-2xl p-6 sm:p-8 border border-white/10 relative overflow-hidden group", (!isYesterdayMissing && !yesterdayEntry) ? "md:col-span-2" : "")}>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-orange-500/20 transition-all duration-700"></div>
 
-                        <h3 className="font-bold text-lg text-white mb-6 relative z-10">Log new signups for Today</h3>
+                        <h3 className="font-bold text-base sm:text-lg text-white mb-4 sm:mb-6 relative z-10">Log new signups for Today</h3>
                         <div className="flex gap-4 relative z-10">
                             <Input
                                 type="number"
@@ -282,14 +282,14 @@ export function Dashboard({ user, products }: DashboardProps) {
                                 value={todayEntry && !isEditingToday ? todayEntry.count : todayCount}
                                 onChange={(e) => setTodayCount(e.target.value)}
                                 disabled={!!todayEntry && !isEditingToday}
-                                className={cn("text-lg h-14 bg-neutral-900/50 border-white/10 text-white placeholder:text-neutral-600 focus-visible:border-orange-500 focus-visible:ring-orange-500/20", todayEntry && !isEditingToday && "opacity-50 cursor-not-allowed")}
+                                className={cn("text-base sm:text-lg h-12 sm:h-14 bg-neutral-900/50 border-white/10 text-white placeholder:text-neutral-600 focus-visible:border-orange-500 focus-visible:ring-orange-500/20", todayEntry && !isEditingToday && "opacity-50 cursor-not-allowed")}
                             />
                             {todayEntry && !isEditingToday ? (
-                                <Button size="lg" onClick={() => { setTodayCount(todayEntry.count.toString()); setIsEditingToday(true) }} className="h-14 px-8 bg-white/10 text-white hover:bg-white/20 font-bold">
+                                <Button size="lg" onClick={() => { setTodayCount(todayEntry.count.toString()); setIsEditingToday(true) }} className="h-12 sm:h-14 px-6 sm:px-8 bg-white/10 text-white hover:bg-white/20 font-bold text-sm sm:text-base">
                                     Edit
                                 </Button>
                             ) : (
-                                <Button size="lg" onClick={() => handleSave(todayStr, todayCount)} disabled={isSaving || todayCount === ""} className="h-14 px-8 bg-white text-black hover:bg-neutral-200 font-bold">
+                                <Button size="lg" onClick={() => handleSave(todayStr, todayCount)} disabled={isSaving || todayCount === ""} className="h-12 sm:h-14 px-6 sm:px-8 bg-white text-black hover:bg-neutral-200 font-bold text-sm sm:text-base">
                                     {isSaving ? "Saving..." : "Save"}
                                 </Button>
                             )}
@@ -319,7 +319,7 @@ export function Dashboard({ user, products }: DashboardProps) {
                         </div>
 
                         {/* Chart Content */}
-                        <div className="relative h-[300px] bg-neutral-950 w-full group">
+                        <div className="relative h-[240px] sm:h-[300px] bg-neutral-950 w-full group">
                             {/* Grid Lines */}
                             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:linear-gradient(to_bottom,black,transparent)] pointer-events-none"></div>
 
