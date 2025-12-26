@@ -125,7 +125,7 @@ export function LandingPage() {
                                 />
                                 <div className="absolute right-1 top-1 bottom-1">
                                     <Button size="lg" className="h-full rounded-full bg-orange-600 px-6 font-semibold text-white hover:bg-orange-500 transition-all shadow-[0_0_20px_-5px_var(--color-orange-600)]" disabled={isLoading}>
-                                        {isLoading ? "Sending..." : "Start tracking"} <ArrowRight className="ml-2 h-4 w-4" />
+                                        {isLoading ? "Sending..." : "Start my 30-day streak"} <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
                                 </div>
                             </form>
@@ -486,14 +486,14 @@ export function LandingPage() {
 
                 {/* Footer CTA */}
                 <section className="py-32 border-t border-white/5 text-center px-6">
-                    <h2 className="text-4xl font-bold text-white mb-8">Start tracking your signups</h2>
+                    <h2 className="text-4xl font-bold text-white mb-8">Start your 30-day streak today</h2>
                     <p className="text-xl text-neutral-400 mb-10 max-w-xl mx-auto">Know if things are moving — without overthinking it.</p>
 
                     <div className="flex justify-center">
                         <div className="relative">
                             <div className="absolute -inset-1 rounded-full bg-orange-500 opacity-20 blur-lg animate-pulse"></div>
                             <Button size="lg" className="relative h-14 rounded-full bg-orange-600 px-8 text-lg font-semibold text-white hover:bg-orange-500 transition-all" onClick={triggerLogin}>
-                                Start tracking <ArrowRight className="ml-2 h-5 w-5" />
+                                Start my 30-day streak <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </div>
                     </div>
